@@ -1,0 +1,53 @@
+%{
+#include<stdio.h>
+%}
+
+DIGIT [0-9]
+INTEGER {DIGIT}+
+REAL {DIGIT}*"."INTEGER
+TEXT [a-zA-Z ]+
+TEXT_NUMBERS [a-zA-Z0-9 ]+
+CONDITIONALS "if"|"else if"|"else"|"switch"|"case"
+ITERATORS "for"|"while"|"do"
+DELIMITER [;:\t\n(),]
+KEYWORD "break"|"continue"|"import"|"goto"|"print"|"println"|"out"|"System"|"int"|"in"|"private"|"protected"|"final"|"float"|"long"|"String"|"write"|"read"|"open"|"close"|"return"|"char"|"new"|"class"|"try"|"Exception"|"unsigned"|"signed"|"short"|"double"|"public"|"static"|"void"|"main"|"args"|"extends"|"throws"
+IDENTIFIER [a-zA-Z$_][a-zA-Z0-9$_]*
+NON_IDENTIFIER {DIGIT}+[A-Za-z]+
+COMMENT "/*"{TEXT_NUMBERS}*"*/"|"//"{TEXT_NUMBERS}*
+AOPERATOR "+"|"-"|"*"|"/"|"="
+BLOCK_BEGINS "{"
+BLOCK_ENDS "}"
+UNARY "++"|"--"
+LOPERATOR "&"|"|"|"&&"|"~"|"||"|">"|"<"|">="|"<="|"=="
+FUNCTION {IDENTIFIER}+"("{DELIMITER}*{TEXT}{TEXT_NUMBERS}*{DELIMITER}*")"
+
+%%
+{CONDITIONALS} { printf("%s is a conditional\n", yytext); }
+{ITERATORS} { printf("%s is an iterator\n", yytext); }
+{DIGIT} { printf("%s is a digit\n", yytext); }
+{INTEGER} { printf("%s is a number\n", yytext); }
+{REAL} { printf("%s is a real number\n", yytext); }
+{DELIMITER} { printf("%s is a delimiter\n", yytext); }
+{KEYWORD} { printf("%s is a keyword\n", yytext); }
+{NON_IDENTIFIER} {printf("Could not process %s", yytext); }
+{IDENTIFIER} { printf("%s is an identifier\n", yytext); }
+{COMMENT} { printf("%s is a comment\n", yytext); }
+{AOPERATOR} { printf("%s is a mathematical operator\n", yytext); }
+{LOPERATOR} { printf("%s is a logical operator\n", yytext); }
+{BLOCK_BEGINS} { printf("Block begins\n", yytext); }
+{BLOCK_ENDS} { printf("Block ends\n", yytext); }
+{UNARY} { printf("%s is a unary operator\n", yytext); }
+{FUNCTION} { printf("%s is a function\n", yytext); }
+%%
+
+
+main(void) {
+yyin = fopen("sample.java", "r");
+yylex();
+}
+int yywrap()
+{
+return(1);
+}
+
+
